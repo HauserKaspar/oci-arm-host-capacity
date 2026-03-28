@@ -1,6 +1,6 @@
 name: Create OCI A1 Instance                                                                      
                   
-  "on":
+  on:
     schedule:
       - cron: '*/5 * * * *'                                                                         
     workflow_dispatch:
