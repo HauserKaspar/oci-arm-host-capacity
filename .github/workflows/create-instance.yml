@@ -37,7 +37,7 @@ jobs:
           openssl rsa -in /tmp/oci_key.pem -check -noout 2>&1 || true
 
       - name: Run instance creator
-        run: php index.php
+        run: php index.php 2>&1 | tee /tmp/oci_output.txt
         env:
           OCI_REGION: ${{ secrets.OCI_REGION }}
           OCI_USER_ID: ${{ secrets.OCI_USER_ID }}
@@ -52,3 +52,16 @@ jobs:
           OCI_SHAPE: VM.Standard.A1.Flex
           OCI_MAX_INSTANCES: 1
           OCI_SSH_PUBLIC_KEY: ${{ secrets.OCI_SSH_PUBLIC_KEY }}
+
+      - name: Notify if instance created
+        if: always()
+        run: |
+          if grep -q "ocid1.instance" /tmp/oci_output.txt 2>/dev/null; then
+            curl -s -X POST "https://ntfy.sh/$NTFY_TOPIC" \
+              -H "Title: 🚀 OCI A1 instance created!" \
+              -H "Priority: urgent" \
+              -H "Tags: rocket" \
+              -d "Instancja VM.Standard.A1.Flex została stworzona. Sprawdź OCI Console."
+          fi
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}

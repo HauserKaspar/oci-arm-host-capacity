@@ -48,6 +48,7 @@ async function main() {
   if (foundIndicator) {
     console.log('\n✅ ZNALEZIONO MAJ 2026 — tworzę issue na GitHubie!');
     await createGithubIssue();
+    await sendNtfy('🎉 Fitssey: Maj 2026 dostępny!', 'Otwórz aplikację i zapisz się na zajęcia.');
   } else {
     console.log('\n⏳ Maj 2026 jeszcze niedostępny.');
   }
@@ -76,6 +77,17 @@ async function createGithubIssue() {
   } else {
     console.error('Błąd tworzenia issue:', await res.text());
   }
+}
+
+async function sendNtfy(title, message) {
+  const topic = process.env.NTFY_TOPIC;
+  if (!topic) return;
+  await fetch(`https://ntfy.sh/${topic}`, {
+    method: 'POST',
+    headers: { 'Title': title, 'Priority': 'urgent', 'Tags': 'tada' },
+    body: message,
+  });
+  console.log('Ntfy wysłane.');
 }
 
 main().catch(err => {
