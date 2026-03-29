@@ -32,7 +32,7 @@ jobs:
         env:
           OCI_PRIVATE_KEY: ${{ secrets.OCI_PRIVATE_KEY }}
         run: |
-          echo "$OCI_PRIVATE_KEY" | base64 -d > /tmp/oci_key.pem
+          printf '%s\n' "$OCI_PRIVATE_KEY" > /tmp/oci_key.pem
           chmod 600 /tmp/oci_key.pem
 
       - name: Run instance creator
