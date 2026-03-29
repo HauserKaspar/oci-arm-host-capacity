@@ -30,11 +30,10 @@ jobs:
 
       - name: Write OCI private key
         env:
-          OCI_PRIVATE_KEY: ${{ secrets.OCI_PRIVATE_KEY }}
+          OCI_PRIVATE_KEY_B64: ${{ secrets.OCI_PRIVATE_KEY_B64 }}
         run: |
-          printf '%s\n' "$OCI_PRIVATE_KEY" | tr -d '\r' > /tmp/oci_key.pem
+          echo "$OCI_PRIVATE_KEY_B64" | base64 -d > /tmp/oci_key.pem
           chmod 600 /tmp/oci_key.pem
-          echo "Lines: $(wc -l < /tmp/oci_key.pem)"
           openssl rsa -in /tmp/oci_key.pem -check -noout 2>&1 || true
 
       - name: Run instance creator
