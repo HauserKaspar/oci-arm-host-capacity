@@ -29,8 +29,10 @@ jobs:
         run: composer install --no-dev --prefer-dist --no-progress
 
       - name: Write OCI private key
+        env:
+          OCI_PRIVATE_KEY: ${{ secrets.OCI_PRIVATE_KEY }}
         run: |
-          echo "${{ secrets.OCI_PRIVATE_KEY }}" > /tmp/oci_key.pem
+          printf '%s' "$OCI_PRIVATE_KEY" > /tmp/oci_key.pem
           chmod 600 /tmp/oci_key.pem
 
       - name: Run instance creator
