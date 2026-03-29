@@ -34,6 +34,10 @@ jobs:
         run: |
           printf '%s\n' "$OCI_PRIVATE_KEY" > /tmp/oci_key.pem
           chmod 600 /tmp/oci_key.pem
+          echo "=== Key file check ==="
+          head -1 /tmp/oci_key.pem
+          tail -1 /tmp/oci_key.pem
+          wc -l /tmp/oci_key.pem
 
       - name: Run instance creator
         run: php index.php
