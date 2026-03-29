@@ -32,7 +32,7 @@ jobs:
         env:
           OCI_PRIVATE_KEY: ${{ secrets.OCI_PRIVATE_KEY }}
         run: |
-          printf '%s\n' "$OCI_PRIVATE_KEY" > /tmp/oci_key.pem
+          printf '%s\n' "$OCI_PRIVATE_KEY" | tr -d '\r' > /tmp/oci_key.pem
           chmod 600 /tmp/oci_key.pem
           echo "Lines: $(wc -l < /tmp/oci_key.pem)"
           openssl rsa -in /tmp/oci_key.pem -check -noout 2>&1 || true
